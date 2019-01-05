@@ -12,6 +12,11 @@
     </UserControl.Resources>
     <Grid>
         <ListBox Name="ListBox" HorizontalContentAlignment="Stretch" DataContext="{Binding VisibleSlot}">
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Palico Name: " VerticalAlignment="Center"/>
+                <TextBox Text="{Binding PalicoName, Mode=TwoWay}" MaxLength = "64" BorderBrush="Transparent" Background="Transparent" SelectionBrush="Transparent"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Hunter Name: " VerticalAlignment="Center"/>
                 <TextBox Text="{Binding HunterName, Mode=TwoWay}" UndoLimit = "1" MaxLength = "64" BorderBrush="Transparent" Background="Transparent" SelectionBrush="Transparent"/>

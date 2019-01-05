@@ -1,6 +1,9 @@
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Windows.Data;
 using MHW_Save_Editor.SaveSlot;
 
@@ -20,6 +23,7 @@ namespace MHW_Save_Editor.SlotEditing
         }
 
         public string HunterName{ get => charslot.HunterName; set => charslot.HunterName = value; }
+        public string PalicoName { get => charslot.PalicoName; set => charslot.PalicoName = value; }
         public UInt32 HunterRank { get => charslot.HunterRank; set => charslot.HunterRank = value; }
         public UInt32 Zenny  { get => charslot.Zenny; set => charslot.Zenny = value; }
         public UInt32 ResearchPoints { get => charslot.ResearchPoints; set => charslot.ResearchPoints = value; }
@@ -56,6 +60,18 @@ namespace MHW_Save_Editor.SlotEditing
         {
             charslot.Serialize().CopyTo(savefile,offset);
             BitConverter.GetBytes(charslot.Gender).CopyTo(savefile, offset + 0xb0);
+
+            // Save Palico name
+            charslot.SerializePalico().CopyTo(savefile, offset + 747);
+
+            // Seems we need to also set this address or it doesn't stick
+            charslot.SerializePalico().CopyTo(savefile, offset + 894577);
+
+
+            // Final offset but doesn't seem to need set maybe it does?
+            // charslot.SerializePalico().CopyTo(savefile, offset + 980805);
+
+            //offset + 747 + charslot.SerializePalico().Length = palico level?
         }
     }
     

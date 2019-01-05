@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,14 +12,18 @@ namespace MHW_Save_Editor.SaveSlot
     {
         public static readonly Int32 SaveSlotOffset = 0x003004DC;
         public static readonly Int32 SaveSize = 0xF6110;
+
         public CharacterSlot(byte[] charslot)
         {
             GetSlotData(charslot);
             DLCClaimed = GetDLC(charslot);
         }
-        
+
         private byte[] _HunterName { get; set; }
         public string HunterName { get => _HunterName.DecodeUTF8(); set => _HunterName = value.ToFixedSizeCharArray(64); }
+
+        private byte[] _PalicoName { get; set; }
+        public string PalicoName { get => _PalicoName.DecodeUTF8(); set => _PalicoName = value.ToFixedSizeCharArray(64); }
 
         public UInt32 HunterRank;
         public UInt32 Zenny;
@@ -39,7 +44,9 @@ namespace MHW_Save_Editor.SaveSlot
         private void GetSlotData(byte[] newdata)
         {
             int i = 0;
+            int pIndex = 747;
             _HunterName = newdata.Slice(0, 64); i+=64;
+            _PalicoName = newdata.Slice(pIndex, pIndex + 64);
             HunterRank = BitConverter.ToUInt32(newdata,i);i+=4;
             Zenny = BitConverter.ToUInt32(newdata,i);i+=4;
             ResearchPoints = BitConverter.ToUInt32(newdata,i);i+=4;
@@ -59,12 +66,19 @@ namespace MHW_Save_Editor.SaveSlot
             return dlc;
         }
 
+        public byte[] SerializePalico()
+        {
+            return _PalicoName;
+        }
         public byte[] Serialize()
         {
             return
-                    _HunterName.Concat(BitConverter.GetBytes(HunterRank))
-                        .Concat(BitConverter.GetBytes(Zenny)).Concat(BitConverter.GetBytes(ResearchPoints))
-                        .Concat(BitConverter.GetBytes(HunterXP)).Concat(BitConverter.GetBytes(PlayTime)).ToArray();
+                _HunterName.
+                Concat(BitConverter.GetBytes(HunterRank)).
+                Concat(BitConverter.GetBytes(Zenny)).
+                Concat(BitConverter.GetBytes(ResearchPoints)).
+                Concat(BitConverter.GetBytes(HunterXP)).
+                Concat(BitConverter.GetBytes(PlayTime)).ToArray();
         }
 
         public static readonly Int32 dlclocaloffset = 0xf34b3;
