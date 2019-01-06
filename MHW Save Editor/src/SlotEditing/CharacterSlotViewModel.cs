@@ -62,16 +62,7 @@ namespace MHW_Save_Editor.SlotEditing
             BitConverter.GetBytes(charslot.Gender).CopyTo(savefile, offset + 0xb0);
 
             // Save Palico name
-            charslot.SerializePalico().CopyTo(savefile, offset + 747);
-
-            // Seems we need to also set this address or it doesn't stick
-            charslot.SerializePalico().CopyTo(savefile, offset + 894577);
-
-
-            // Final offset but doesn't seem to need set maybe it does?
-            // charslot.SerializePalico().CopyTo(savefile, offset + 980805);
-
-            //offset + 747 + charslot.SerializePalico().Length = palico level?
+            charslot.SerializePalico().CopyTo(savefile, offset + 0xDA671);
         }
     }
     

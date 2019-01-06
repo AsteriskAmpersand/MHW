@@ -23,7 +23,7 @@ namespace MHW_Save_Editor.SaveSlot
         public string HunterName { get => _HunterName.DecodeUTF8(); set => _HunterName = value.ToFixedSizeCharArray(64); }
 
         private byte[] _PalicoName { get; set; }
-        public string PalicoName { get => _PalicoName.DecodeUTF8(); set => _PalicoName = value.ToFixedSizeCharArray(64); }
+        public string PalicoName { get => _PalicoName.DecodeUTF8(); set => _PalicoName = value.ToFixedSizeCharArray(16); }
 
         public UInt32 HunterRank;
         public UInt32 Zenny;
@@ -44,9 +44,9 @@ namespace MHW_Save_Editor.SaveSlot
         private void GetSlotData(byte[] newdata)
         {
             int i = 0;
-            int pIndex = 747;
+            int pIndex = 0xDA671;
             _HunterName = newdata.Slice(0, 64); i+=64;
-            _PalicoName = newdata.Slice(pIndex, pIndex + 64);
+            _PalicoName = newdata.Slice(pIndex, pIndex + 16);
             HunterRank = BitConverter.ToUInt32(newdata,i);i+=4;
             Zenny = BitConverter.ToUInt32(newdata,i);i+=4;
             ResearchPoints = BitConverter.ToUInt32(newdata,i);i+=4;
